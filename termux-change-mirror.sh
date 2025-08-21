@@ -1,109 +1,33 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>
-<html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
-<!--[if IE 7]>
-<html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
-<!--[if IE 8]>
-<html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js" lang="en-US"> <!--<![endif]-->
+#!/bin/bash
 
-<head>
-  <title>Suspected phishing site | Cloudflare</title>
-  <meta charset="UTF-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-<meta name="robots" content="noindex, nofollow" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="stylesheet" id="cf_styles-css" href="/cdn-cgi/styles/cf.errors.css" />
-<!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" /><![endif]-->
-<style>body{margin:0;padding:0}</style>
+# 备份原 sources.list 文件
+cp $PREFIX/etc/apt/sources.list $PREFIX/etc/apt/sources.list.bak
 
+# 显示可选择的镜像源菜单
+echo "请选择要更换的国内镜像源："
+echo "1. 清华大学 TUNA 镜像源"
+echo "2. 中国科学技术大学镜像源"
+echo "3. 齐鲁工业大学镜像源"
+read -p "请输入选项编号：" choice
 
-<!--[if gte IE 10]><!-->
-<script>
-  if (!navigator.cookieEnabled) {
-    window.addEventListener('DOMContentLoaded', function () {
-      var cookieEl = document.getElementById('cookie-alert');
-      cookieEl.style.display = 'block';
-    })
-  }
-</script>
-<!--<![endif]-->
+# 根据用户选择进行相应的替换操作
+case $choice in
+    1)
+        sed -i's@^<inline_LaTeX_Formula>deb.*stable main<\inline_LaTeX_Formula>$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/termux-packages-24 stable main@' $PREFIX/etc/apt/sources.list
+        sed -i's@^<inline_LaTeX_Formula>deb.*games stable<\inline_LaTeX_Formula>$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/game-packages-24 games stable@' $PREFIX/etc/apt/sources.list.d/game.list
+        sed -i's@^<inline_LaTeX_Formula>deb.*science stable<\inline_LaTeX_Formula>$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/science-packages-24 science stable@' $PREFIX/etc/apt/sources.list.d/science.list
+        ;;
+    2)
+        echo "deb https://mirrors.ustc.edu.cn/termux/apt/termux-main stable main" > $PREFIX/etc/apt/sources.list
+        ;;
+    3)
+        sed -i's@^<inline_LaTeX_Formula>deb.*stable main<\inline_LaTeX_Formula>$@#\1\ndeb https://mirrors.qlu.edu.cn/termux/apt/termux-main stable main@' $PREFIX/etc/apt/sources.list
+        ;;
+    *)
+        echo "无效的选项，请重新运行脚本并选择正确的编号。"
+        exit 1
+        ;;
+esac
 
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <script>
-    function onTurnstileSuccess(token) {
-      document.getElementById("bypass-button").disabled = false;
-    }
-  </script>
-</head>
-
-<body>
-  <div id="cf-wrapper">
-    <div class="cf-alert cf-alert-error cf-cookie-error" id="cookie-alert" data-translate="enable_cookies">Please enable
-      cookies.
-    </div>
-    <div id="cf-error-details" class="cf-error-details-wrapper">
-      <div class="cf-section cf-wrapper" style="margin-top: 100px;margin-bottom:200px;">
-        <div class="cf-columns one">
-          <div class="cf-column">
-            <h4 class="cf-text-error"><i class="cf-icon-exclamation-sign" style="background-size: 18px;
-              height: 18px;
-              width: 18px;
-              margin-bottom: 2px;"></i> Warning</h4>
-
-            
-            <h2 style="margin: 16px 0;">Suspected Phishing</h2>
-            <strong>This website has been reported for potential phishing.</strong>
-            <p>Phishing is when a site attempts to steal sensitive information by falsely presenting as a safe source.
-            </p>
-            
-            <form action="/cdn-cgi/phish-bypass" method="GET" enctype="text/plain" style="margin-top: 12px;">
-              
-              <a href="https://www.cloudflare.com/learning/access-management/phishing-attack/" class="cf-btn"
-                style="background-color: #404040; color: #fff; border: 0;">Learn More</a>
-              
-
-              
-              <input type="hidden" name="atok" value="8d5mvktSLlVH2wlGD9xbLwKcibs862rvycnZsFadoGo-1755738863.893512-0.0.1.1-/ittps://github.com/luyuanbo79/luyuanbo/releases/download/%e8%84%9a%e6%9c%ac%e4%b8%8b%e8%bd%bd%e4%ba%8c/termux-change-mirror.sh">
-              <input type="hidden" name="original_path" value="/https://github.com/luyuanbo79/luyuanbo/releases/download/%e8%84%9a%e6%9c%ac%e4%b8%8b%e8%bd%bd%e4%ba%8c/termux-change-mirror.sh">
-              <button type="submit" id="bypass-button" class="cf-btn cf-btn-danger"
-                style="color: #bd2426; background: transparent;" data-translate="dismiss_and_enter">Ignore & Proceed
-              </button>
-              <br> <br>
-              <div class="cf-turnstile" data-sitekey="0x4AAAAAABDaGKKSGLylJZFA" data-callback="onTurnstileSuccess">
-              </div>
-              
-            </form>
-          </div>
-        </div>
-      </div><!-- /.section -->
-      <div id="ts-blocks" style="display:none;"></div>
-      <div class="cf-error-footer cf-wrapper w-240 lg:w-full py-10 sm:py-4 sm:px-8 mx-auto text-center sm:text-left border-solid border-0 border-t border-gray-300">
-    <p class="text-13">
-      <span class="cf-footer-item sm:block sm:mb-1">Cloudflare Ray ID: <strong class="font-semibold">972645fb5a259a64</strong></span>
-      <span class="cf-footer-separator sm:hidden">&bull;</span>
-      <span id="cf-footer-item-ip" class="cf-footer-item hidden sm:block sm:mb-1">
-        Your IP:
-        <button type="button" id="cf-footer-ip-reveal" class="cf-footer-ip-reveal-btn">Click to reveal</button>
-        <span class="hidden" id="cf-footer-ip">180.164.60.127</span>
-        <span class="cf-footer-separator sm:hidden">&bull;</span>
-      </span>
-      <span class="cf-footer-item sm:block sm:mb-1"><span>Performance &amp; security by</span> <a rel="noopener noreferrer" href="https://www.cloudflare.com/5xx-error-landing" id="brand_link" target="_blank">Cloudflare</a></span>
-      
-    </p>
-    <script>(function(){function d(){var b=a.getElementById("cf-footer-item-ip"),c=a.getElementById("cf-footer-ip-reveal");b&&"classList"in b&&(b.classList.remove("hidden"),c.addEventListener("click",function(){c.classList.add("hidden");a.getElementById("cf-footer-ip").classList.remove("hidden")}))}var a=document;document.addEventListener&&a.addEventListener("DOMContentLoaded",d)})();</script>
-  </div><!-- /.error-footer -->
-
-    </div><!-- /#cf-error-details -->
-  </div><!-- /#cf-wrapper -->
-
-  <script>
-    window._cf_translation = {};
-    
-    
-  </script>
-</body>
-
-</html>
+# 更新软件包列表并升级软件
+apt update && apt upgrade
